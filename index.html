@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latihan Online SD — Semua Mata Pelajaran</title>
+<meta name="description" content="Kumpulan latihan online SD: English, Seni Teater, Matematika, Science, dan soal olimpiade KSNR — dalam satu tempat">
+<style>
+  :root{
+    --ink:#1f2937; --muted:#6b7280; --card:#ffffff; --line:#e5e7eb;
+    --c1:#6d28d9; --c2:#0f766e; --c3:#b45309; --c4:#0369a1; --c5:#be123c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,sans-serif;color:var(--ink);min-height:100vh;padding:16px;
+    background:linear-gradient(135deg,#ede9fe,#ccfbf1 45%,#fef3c7)}
+  .wrap{max-width:900px;margin:0 auto}
+  header{text-align:center;margin-bottom:20px}
+  header h1{font-size:clamp(1.4rem,5vw,2.1rem);color:#3730a3}
+  header p{color:var(--muted);font-size:.95rem;margin-top:4px}
+  .total{display:inline-block;margin-top:10px;background:#fff;border-radius:999px;padding:6px 16px;
+    font-weight:700;color:#3730a3;box-shadow:0 4px 12px rgba(55,48,163,.12);font-size:.9rem}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+  .card{background:var(--card);border-radius:18px;padding:20px;box-shadow:0 8px 22px rgba(31,41,55,.10);
+    display:flex;flex-direction:column;border-top:6px solid var(--accent,#6d28d9)}
+  .card .top{display:flex;align-items:center;gap:10px}
+  .card .emo{font-size:2rem;line-height:1}
+  .card h2{font-size:1.1rem;line-height:1.3}
+  .card .sub{color:var(--muted);font-size:.82rem;margin-top:2px}
+  .card p.desc{font-size:.92rem;line-height:1.55;margin:10px 0;color:#374151;flex:1}
+  .meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .tag{background:#f3f4f6;border-radius:999px;padding:3px 10px;font-size:.78rem;color:#4b5563}
+  .tag.count{background:#ecfdf5;color:#047857;font-weight:700}
+  .btn{display:block;text-align:center;text-decoration:none;background:var(--accent,#6d28d9);color:#fff;
+    font-weight:700;border-radius:12px;padding:12px 14px;font-size:.98rem}
+  .btn:hover{filter:brightness(1.08)}
+  .btn.sec{background:#f3f4f6;color:#374151;margin-top:8px}
+  .wide{grid-column:1/-1}
+  footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:22px;line-height:1.7}
+  .hide{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>📚 Latihan Online SD</h1>
+    <p>Semua mata pelajaran dalam satu tempat · soal berganti otomatis tiap hari</p>
+    <span class="total" id="total">Menghitung bank soal…</span>
+  </header>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>
+    Soal latihan untuk belajar mandiri. Quiz mata pelajaran memakai sistem <b>soal harian</b>:
+    setiap tanggal, soal dan pilihan jawaban diacak otomatis dengan tingkat kesulitan yang sama.<br>
+    Soal KSNR diadaptasi dari naskah <b>KSNR ke-8</b> (Klinik Pendidikan MIPA).
+  </footer>
+</div>
+
+<script>
+const SITUS = [
+  {nama:"English", emo:"🌐", warna:"#6d28d9", url:"https://audreyakbar1-design.github.io/english-hots-quiz/",
+   sub:"Bahasa Inggris · Kelas 2 SD", desc:"Reading, kosakata, tata bahasa, dan soal cerita singkat berbahasa Inggris. Soal harian diacak dari bank soal.",
+   pool:"https://audreyakbar1-design.github.io/english-hots-quiz/pool.js", tags:["HOTS","Pilihan ganda"]},
+  {nama:"Seni Teater", emo:"🎭", warna:"#be123c", url:"https://audreyakbar1-design.github.io/seni-teater-hots/",
+   sub:"SBdP · Kelas 2 SD", desc:"Unsur pertunjukan, tata panggung, busana, rias, musik, wayang & ketoprak, kerja sama tim pentas.",
+   pool:"https://audreyakbar1-design.github.io/seni-teater-hots/pool.js", tags:["HOTS","Pilihan ganda"]},
+  {nama:"Matematika", emo:"➗", warna:"#b45309", url:"https://audreyakbar1-design.github.io/matematika-hots/",
+   sub:"Matematika · Kelas 2 SD", desc:"Bilangan, pola, uang, waktu, pengukuran, bangun datar, dan soal cerita.",
+   pool:"https://audreyakbar1-design.github.io/matematika-hots/pool.js", tags:["HOTS","Pilihan ganda"]},
+  {nama:"Science — Cahaya & Listrik", emo:"💡", warna:"#0369a1", url:"https://audreyakbar1-design.github.io/science-hots/",
+   sub:"Sains / IPA · Kelas 2 SD", desc:"Bab Cahaya & Listrik mengikuti buku Vector International Primary Science 2 (Unit 1–2): sumber cahaya, bayangan, rangkaian, sakelar, keselamatan listrik.",
+   pool:"https://audreyakbar1-design.github.io/science-hots/pool.js", tags:["HOTS","Pilihan ganda"]},
+  {nama:"KSNR 8 — Kelas 3–4 & 5–6", emo:"🧪", warna:"#0f766e", url:"https://audreyakbar1-design.github.io/ksnr-online/",
+   sub:"Olimpiade sains · KPM", desc:"Soal KSNR ke-8 tingkat semifinal. Ada Mode Lomba (90 menit, skor 4/−1/0) dan Mode Latihan (pembahasan langsung), lengkap dengan gambar.",
+   pool:"https://audreyakbar1-design.github.io/ksnr-online/pool.js", tags:["Mode lomba","90 menit","2 tingkat"]}
+];
+
+const $=id=>document.getElementById(id);
+const grid=$("grid");
+grid.innerHTML = SITUS.map((s,k)=>`
+  <div class="card" style="--accent:${s.warna}">
+    <div class="top">
+      <span class="emo">${s.emo}</span>
+      <div><h2>${s.nama}</h2><div class="sub">${s.sub}</div></div>
+    </div>
+    <p class="desc">${s.desc}</p>
+    <div class="meta">
+      <span class="tag count" id="c${k}">…</span>
+      ${s.tags.map(t=>`<span class="tag">${t}</span>`).join("")}
+    </div>
+    <a class="btn" href="${s.url}">Buka Latihan ➜</a>
+  </div>`).join("");
+
+// hitung jumlah soal dari pool.js tiap situs (domain sama, jadi bisa dibaca)
+(async () => {
+  let total = 0, ada = 0;
+  await Promise.all(SITUS.map(async (s, k) => {
+    const el = $("c" + k);
+    try {
+      const r = await fetch(s.pool, {cache: "no-store"});
+      const t = await r.text();
+      const n = (t.match(/"lv":/g) || []).length;
+      if (n > 0) { el.textContent = n + " soal"; total += n; ada++; }
+      else el.textContent = "bank soal";
+    } catch (e) { el.textContent = "bank soal"; }
+  }));
+  $("total").textContent = ada ? `📊 ${total} soal tersedia dari ${ada} mata pelajaran` : "📊 Pilih mata pelajaran";
+})();
+</script>
+</body>
+</html>
