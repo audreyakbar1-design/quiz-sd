@@ -67,7 +67,7 @@ const SITUS = [
   {nama:"Matematika", emo:"➗", warna:"#b45309", url:"https://audreyakbar1-design.github.io/matematika-hots/",
    sub:"Matematika · Kelas 2 SD", desc:"Bilangan, pola, uang, waktu, pengukuran, bangun datar, dan soal cerita.",
    pool:"https://audreyakbar1-design.github.io/matematika-hots/pool.js", tags:["HOTS","Pilihan ganda"]},
-  {nama:"Science — Cahaya & Listrik", emo:"💡", warna:"#0369a1", url:"https://audreyakbar1-design.github.io/science-hots/",
+  {nama:"Science — Semua Bab", emo:"💡", warna:"#0369a1", url:"https://audreyakbar1-design.github.io/science-hots/",
    sub:"Sains / IPA · Kelas 2 SD", desc:"Semua bab mengikuti buku Vector International Primary Science 2 (Unit 1–6) ditambah bab lanjutan: Cahaya, Listrik, Uji Bahan, Sifat Bahan, Matahari &amp; Bumi, Makhluk Hidup &amp; Lingkungan, Tumbuhan &amp; Hewan, Rantai Makanan, Tubuh Manusia. Ada pemilih bab.",
    pool:"https://audreyakbar1-design.github.io/science-hots/pool.js", tags:["HOTS","Pilihan ganda"]},
   {nama:"KSNR 8 — Kelas 3–4 & 5–6", emo:"🧪", warna:"#0f766e", url:"https://audreyakbar1-design.github.io/ksnr-online/",
@@ -91,26 +91,12 @@ grid.innerHTML = SITUS.map((s,k)=>`
     <a class="btn" href="${s.url}">Buka Latihan ➜</a>
   </div>`).join("");
 
-// hitung jumlah soal dari pool.js tiap situs (domain sama, jadi bisa dibaca)
-(async () => {
-  let total = 0, ada = 0;
-  await Promise.all(SITUS.map(async (s, k) => {
-    const el = $("c" + k);
-    try {
-      const urls = Array.isArray(s.pool) ? s.pool : [s.pool];
-      let n = 0;
-      for (const u of urls) {
-        try {
-          const r = await fetch(u, {cache: "no-store"});
-          const t = await r.text();
-          n += (t.match(/"o":\[/g) || []).length;
-        } catch (e) {}
-      }
-      if (n > 0) { el.textContent = n + " soal"; total += n; ada++; }
-      else el.textContent = "bank soal";
-    } catch (e) { el.textContent = "bank soal"; }
-  }));
-  $("total").textContent = ada ? `📊 ${total} soal tersedia dari ${ada} mata pelajaran` : "📊 Pilih mata pelajaran";
+// Jumlah soal: diperbarui otomatis oleh skrip deploy (tidak bisa fetch lintas domain karena CORS)
+(function(){
+  const J = {0:508, 1:500, 2:500, 3:530, 4:120};   // jumlah soal per kartu
+  let total = 0;
+  Object.keys(J).forEach(k => { const el = $("c" + k); if (el) { el.textContent = J[k] + " soal"; total += J[k]; } });
+  $("total").textContent = "📊 " + total + " soal tersedia dari 5 mata pelajaran";
 })();
 </script>
 </body>
